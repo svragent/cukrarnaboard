@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<title>Karta zaměstnance</title>
+<style>
+  :root{
+    --cream:#F7EFE0;
+    --paper:#FFFDF8;
+    --cocoa:#3B2A20;
+    --cocoa-soft:#6B5744;
+    --caramel:#B9793A;
+    --caramel-deep:#8F5A24;
+    --cherry:#A63446;
+    --honey:#C98B1F;
+    --sage:#5B7B52;
+    --line:#E7D9BE;
+    --line-soft:#F0E5CE;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--cream);
+    color:var(--cocoa);
+    font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+    font-size:14px;
+  }
+  h1,h2,h3{
+    font-family:Georgia,"Iowan Old Style",serif;
+    margin:0;
+  }
+  .app{
+    display:grid;
+    grid-template-columns:260px 1fr;
+    min-height:100vh;
+  }
+  @media (max-width:760px){
+    .app{grid-template-columns:1fr;}
+    .sidebar{border-right:none;border-bottom:1px solid var(--line);}
+  }
+  .sidebar{
+    background:var(--paper);
+    border-right:1px solid var(--line);
+    padding:20px 16px;
+  }
+  .sidebar h1{font-size:19px;line-height:1.25;}
+  .sidebar .sub{color:var(--cocoa-soft);font-size:12px;margin-top:4px;margin-bottom:18px;}
+  .emp-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px;}
+  .emp-item{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:9px 10px;border-radius:8px;cursor:pointer;
+    border:1px solid transparent;
+  }
+  .emp-item:hover{background:var(--line-soft);}
+  .emp-item.active{background:var(--cream);border-color:var(--caramel);}
+  .emp-item .nm{font-weight:600;}
+  .emp-item .lvl{font-size:10px;color:var(--cocoa-soft);}
+  .add-btn{
+    margin-top:14px;width:100%;padding:9px;border-radius:8px;
+    border:1.5px dashed var(--caramel);background:transparent;color:var(--caramel-deep);
+    font-weight:600;cursor:pointer;font-size:13px;
+  }
+  .add-btn:hover{background:var(--line-soft);}
+  .add-form{margin-top:10px;display:flex;flex-direction:column;gap:6px;}
+  .add-form input{
+    font-family:inherit;font-size:13px;padding:7px 8px;border:1px solid var(--line);
+    border-radius:6px;background:var(--paper);color:var(--cocoa);
+  }
+  .add-form .row{display:flex;gap:6px;}
+  .add-form button{
+    flex:1;padding:7px;border-radius:6px;border:none;font-size:12px;font-weight:600;cursor:pointer;
+  }
+  .add-form .confirm{background:var(--caramel);color:#fff;}
+  .add-form .cancel{background:var(--line-soft);color:var(--cocoa-soft);}
+  .backup-row{display:flex;gap:6px;margin-top:12px;}
+  .backup-btn{
+    flex:1;padding:7px 4px;border-radius:6px;border:1px solid var(--line);
+    background:var(--paper);color:var(--cocoa-soft);font-size:11px;cursor:pointer;
+  }
+  .backup-btn:hover{background:var(--line-soft);}
+  .mode-note{font-size:10.5px;color:var(--cocoa-soft);margin-top:10px;line-height:1.4;}
+  .main{padding:26px 30px 60px;max-width:760px;}
+  .empty-state{color:var(--cocoa-soft);padding-top:60px;text-align:center;}
+  .stamp{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:64px;height:64px;border-radius:50%;
+    border:2px solid currentColor;
+    font-family:Georgia,serif;font-weight:700;font-size:11px;
+    text-transform:uppercase;letter-spacing:.04em;text-align:center;
+    transform:rotate(-6deg);
+    line-height:1.15;
+    flex-shrink:0;
+  }
+  .photo-wrap{position:relative;width:64px;height:64px;flex-shrink:0;}
+  .photo-wrap img{
+    width:64px;height:64px;border-radius:50%;object-fit:cover;
+    border:2px solid var(--line);display:block;
+  }
+  .photo-wrap input[type=file]{display:none;}
+  .photo-label{
+    position:absolute;bottom:-4px;right:-4px;
+    background:var(--paper);border:1px solid var(--line);border-radius:50%;
+    width:22px;height:22px;display:flex;align-items:center;justify-content:center;
+    font-size:11px;cursor:pointer;
+  }
+  .card-head{display:flex;gap:16px;align-items:center;margin-bottom:22px;}
+  .card-head .fields{flex:1;}
+  .card-head input, select.level-select{
+    font-family:inherit;font-size:14px;border:none;border-bottom:1px solid var(--line);
+    background:transparent;padding:3px 2px;color:var(--cocoa);width:100%;margin-bottom:4px;
+  }
+  .card-head input:focus, select:focus{outline:none;border-bottom-color:var(--caramel);}
+  .name-input{font-family:Georgia,serif;font-size:20px;font-weight:700;border-bottom:none!important;}
+  .meta-row{display:flex;gap:14px;font-size:12px;color:var(--cocoa-soft);}
+  .meta-row label{display:flex;flex-direction:column;gap:2px;}
+  .wage-line{margin-top:6px;font-size:12px;color:var(--caramel-deep);font-weight:600;}
+
+  section.block{
+    background:var(--paper);border:1px solid var(--line);border-radius:12px;
+    padding:16px 18px;margin-bottom:18px;
+  }
+  section.block h2{font-size:14px;text-transform:uppercase;letter-spacing:.06em;color:var(--cocoa-soft);margin-bottom:10px;font-family:-apple-system,sans-serif;font-weight:700;}
+
+  .progress-bar{height:6px;border-radius:3px;background:var(--line-soft);overflow:hidden;margin-bottom:14px;}
+  .progress-fill{height:100%;background:var(--sage);border-radius:3px;transition:width .2s;}
+
+  .group-label{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--caramel-deep);margin:14px 0 6px;letter-spacing:.04em;}
+  .group-label:first-child{margin-top:0;}
+  .item-row{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:7px 4px;border-bottom:1px solid var(--line-soft);
+    cursor:pointer;user-select:none;
+  }
+  .item-row:last-child{border-bottom:none;}
+  .item-row .txt{font-size:13px;}
+  .state-pill{
+    font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;
+    padding:4px 9px;border-radius:20px;white-space:nowrap;
+  }
+  .s0{background:#EDEAE2;color:var(--cocoa-soft);}
+  .s1{background:#F6E3B4;color:#7A5A0E;}
+  .s2{background:#DCEAD4;color:#3E5C36;}
+
+  .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--cocoa-soft);margin-bottom:10px;}
+  .legend span{display:inline-flex;align-items:center;gap:5px;}
+  .dot{width:9px;height:9px;border-radius:50%;display:inline-block;}
+
+  .exp-row{
+    display:flex;justify-content:space-between;align-items:flex-start;gap:10px;
+    padding:9px 0;border-bottom:1px solid var(--line-soft);
+  }
+  .exp-row:last-child{border-bottom:none;}
+  .exp-row .exp-txt{flex:1;}
+  .exp-row .exp-name{font-weight:600;font-size:13px;}
+  .exp-row .exp-desc{font-size:11.5px;color:var(--cocoa-soft);margin-top:2px;}
+  .exp-btns{display:flex;gap:4px;flex-shrink:0;}
+  .exp-btn{
+    width:30px;height:26px;border-radius:6px;border:1px solid var(--line);
+    background:var(--paper);cursor:pointer;font-size:13px;
+  }
+  .exp-btn.on-ok{background:var(--sage);color:#fff;border-color:var(--sage);}
+  .exp-btn.on-yellow{background:var(--honey);color:#fff;border-color:var(--honey);}
+  .exp-btn.on-red{background:var(--cherry);color:#fff;border-color:var(--cherry);}
+  .flag-note{font-size:10.5px;color:var(--cherry);margin-top:2px;}
+
+  .bonus-summary{
+    display:flex;justify-content:space-between;align-items:center;
+    background:var(--cream);border-radius:8px;padding:10px 12px;margin-top:12px;font-size:13px;
+  }
+  .bonus-summary b{font-family:Georgia,serif;font-size:16px;}
+  .reset-month{
+    margin-top:10px;background:none;border:none;color:var(--cocoa-soft);
+    font-size:11px;text-decoration:underline;cursor:pointer;padding:0;
+  }
+
+  .note-form{display:flex;gap:8px;margin-bottom:10px;}
+  .note-form textarea{
+    flex:1;font-family:inherit;font-size:13px;border:1px solid var(--line);border-radius:8px;
+    padding:8px;resize:vertical;min-height:38px;
+  }
+  .note-form button{
+    background:var(--caramel);color:#fff;border:none;border-radius:8px;
+    padding:0 16px;font-weight:600;cursor:pointer;font-size:13px;
+  }
+  .note-item{padding:8px 0;border-bottom:1px solid var(--line-soft);font-size:13px;}
+  .note-item:last-child{border-bottom:none;}
+  .note-date{font-size:10.5px;color:var(--cocoa-soft);margin-bottom:2px;}
+
+  .danger-link{color:var(--cherry);font-size:11px;background:none;border:none;cursor:pointer;text-decoration:underline;padding:0;}
+  .save-hint{font-size:10.5px;color:var(--cocoa-soft);text-align:center;margin-top:6px;}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="sidebar">
+    <h1>Karta zaměstnance</h1>
+    <div class="sub">Digitální adaptační checklist</div>
+    <ul class="emp-list" id="empList"></ul>
+    <button class="add-btn" id="addBtn">+ Přidat zaměstnance</button>
+    <div class="add-form" id="addForm" style="display:none;">
+      <input id="newNameInput" placeholder="Jméno zaměstnance" autocomplete="off">
+      <div class="row">
+        <button class="confirm" id="confirmAdd">Přidat</button>
+        <button class="cancel" id="cancelAdd">Zrušit</button>
+      </div>
+    </div>
+    <div class="backup-row">
+      <button class="backup-btn" id="exportBtn">⬇ Uložit zálohu</button>
+      <button class="backup-btn" id="importBtn">⬆ Nahrát zálohu</button>
+      <input type="file" id="importFile" accept="application/json" style="display:none;">
+    </div>
+    <div class="mode-note" id="modeNote"></div>
+  </div>
+  <div class="main" id="main">
+    <div class="empty-state">Vyber zaměstnance vlevo, nebo přidej nového.</div>
+  </div>
+</div>
+
+<script>
+const LEVELS = {
+  novacek:{label:"Nováček", base:140, bonus:28},
+  pokrocily:{label:"Pokročilý", base:150, bonus:30},
+  expert:{label:"Expert", base:160, bonus:32}
+};
+
+const CHECKLIST_GROUPS = [
+  {group:"Vstupní logistika", items:[
+    ["logistika","Logistika (mail, smlouva, chaty, …)"]
+  ]},
+  {group:"Nováček", items:[
+    ["nandavani","Nandávání & debaras nádobí"],
+    ["ranni_vecerni","Ranní příprava & večerní úklid"],
+    ["vitrina","Doplňování vitríny"],
+    ["kasa","Kasa"],
+    ["tocenim","Točení zmrzliny"],
+    ["test1","TEST"]
+  ]},
+  {group:"Pokročilý", items:[
+    ["kavovar","Kávovar"],
+    ["system","Systém (objednávky, výdej)"],
+    ["michani","Míchání zmrzliny"],
+    ["test2","TEST"]
+  ]},
+  {group:"Expert", items:[
+    ["mytistroj","Mytí a skládání stroje na zmrzlinu"],
+    ["limonady","Vaření limonád"]
+  ]}
+];
+
+const EXPECTATIONS = [
+  ["vstricnost","Vstřícnost k zákazníkům","Ochota, úsměv, trpělivost, pozitivní tón hlasu."],
+  ["tym","Týmová práce","Dbát pokynů vedoucích, přijímat zpětnou vazbu, pomáhat nováčkům."],
+  ["prioritizace","Prioritizace","Nově příchozí zákazník ► nápoje ► debaras ► doplňování."],
+  ["efektivita","Efektivita","Když není třeba obsloužit zákazníka, aktivně se věnovat práci dle manuálu."],
+  ["dochvilnost","Dochvilnost","Být převlečený ještě před začátkem směny."],
+  ["komunikace","Komunikace","Účast na poradách, sledování chatu, včasné požadavky, umí si říct o pomoc."],
+  ["zajem","Zájem o obor","Základní postupy výroby dortů, zmrzliny, původ a zpracování kávy."],
+  ["dresscode","Dresscode","Culík/drdol, tričko/halenka bez výstřihu a odhalených zad/břicha. Čistá obuv."],
+  ["procesy","Pracovní procesy","Svědomité dodržování dohodnutých pracovních postupů."]
+];
+
+let employees = [];   // [{id,name}]
+let activeId = null;
+let activeData = null;
+const hasCloud = (typeof window.storage !== 'undefined');
+
+const empListEl = document.getElementById('empList');
+const mainEl = document.getElementById('main');
+
+function uid(){ return 'e' + Date.now() + Math.random().toString(36).slice(2,7); }
+
+async function loadIndex(){
+  if(hasCloud){
+    try{
+      const r = await window.storage.get('employees-index', true);
+      employees = r ? JSON.parse(r.value) : [];
+    }catch(e){ employees = []; }
+  } else {
+    try{ employees = JSON.parse(localStorage.getItem('employees-index') || '[]'); }
+    catch(e){ employees = []; }
+  }
+}
+async function saveIndex(){
+  const json = JSON.stringify(employees);
+  if(hasCloud){ await window.storage.set('employees-index', json, true); }
+  else { localStorage.setItem('employees-index', json); }
+}
+async function loadEmployee(id){
+  if(hasCloud){
+    try{
+      const r = await window.storage.get('employee:'+id, true);
+      return r ? JSON.parse(r.value) : null;
+    }catch(e){ return null; }
+  } else {
+    try{
+      const v = localStorage.getItem('employee:'+id);
+      return v ? JSON.parse(v) : null;
+    }catch(e){ return null; }
+  }
+}
+async function saveEmployee(data){
+  const json = JSON.stringify(data);
+  if(hasCloud){ await window.storage.set('employee:'+data.id, json, true); }
+  else { localStorage.setItem('employee:'+data.id, json); }
+}
+async function deleteEmployee(id){
+  if(hasCloud){ try{ await window.storage.delete('employee:'+id, true); }catch(e){} }
+  else { localStorage.removeItem('employee:'+id); }
+}
+
+function blankEmployee(name){
+  const checklist = {};
+  CHECKLIST_GROUPS.forEach(g=>g.items.forEach(([id])=>checklist[id]=0));
+  const monthly = {}; const flagged = {};
+  EXPECTATIONS.forEach(([id])=>{ monthly[id]=0; flagged[id]=false; });
+  return {
+    id:uid(), name:name||"Nový zaměstnanec", phone:"", startDate:"",
+    level:"novacek", checklist, monthly, flagged, notes:[], photo:null
+  };
+}
+
+function resizeImage(file, maxDim, quality){
+  return new Promise((resolve, reject)=>{
+    const reader = new FileReader();
+    reader.onerror = ()=>reject(new Error('read failed'));
+    reader.onload = ()=>{
+      const img = new Image();
+      img.onerror = ()=>reject(new Error('image load failed'));
+      img.onload = ()=>{
+        let w = img.width, h = img.height;
+        if(w > h && w > maxDim){ h = Math.round(h * maxDim/w); w = maxDim; }
+        else if(h > maxDim){ w = Math.round(w * maxDim/h); h = maxDim; }
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function renderList(){
+  empListEl.innerHTML = '';
+  employees.forEach(e=>{
+    const li = document.createElement('li');
+    li.className = 'emp-item' + (e.id===activeId?' active':'');
+    li.innerHTML = `<span class="nm">${escapeHtml(e.name)}</span>`;
+    li.onclick = ()=>selectEmployee(e.id);
+    empListEl.appendChild(li);
+  });
+}
+
+function escapeHtml(s){
+  return (s||'').replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+}
+
+async function selectEmployee(id){
+  activeId = id;
+  mainEl.innerHTML = '<div class="empty-state">Načítám…</div>';
+  activeData = await loadEmployee(id);
+  if(!activeData){ activeData = blankEmployee('Nový zaměstnanec'); activeData.id = id; }
+  renderList();
+  renderMain();
+}
+
+function computeBonusPercent(data){
+  const vals = Object.values(data.monthly);
+  if(vals.includes(2)) return 0;
+  if(vals.includes(1)) return 50;
+  return 100;
+}
+
+function renderMain(){
+  const d = activeData;
+  const lvl = LEVELS[d.level];
+  const bonusPct = computeBonusPercent(d);
+  const bonusAmount = Math.round(lvl.bonus * (bonusPct/100));
+  const total = lvl.base + bonusAmount;
+
+  const totalItems = CHECKLIST_GROUPS.reduce((n,g)=>n+g.items.length,0);
+  const doneItems = Object.values(d.checklist).filter(v=>v===2).length;
+  const progressPct = Math.round((doneItems/totalItems)*100);
+
+  let html = `
+  <div class="card-head">
+    <div class="photo-wrap">
+      ${d.photo
+        ? `<img src="${d.photo}" alt="Foto">`
+        : `<div class="stamp" style="color:${d.level==='expert'?'var(--cherry)':d.level==='pokrocily'?'var(--caramel-deep)':'var(--sage)'}">${lvl.label}</div>`}
+      <label class="photo-label" title="Nahrát fotku">
+        📷<input type="file" id="photoInput" accept="image/*">
+      </label>
+    </div>
+    <div class="fields">
+      <input class="name-input" id="f-name" value="${escapeHtml(d.name)}" placeholder="Jméno">
+      <div class="meta-row">
+        <label>Telefon<input id="f-phone" value="${escapeHtml(d.phone)}" placeholder="000 000 000"></label>
+        <label>Datum nástupu<input id="f-start" type="date" value="${d.startDate||''}"></label>
+        <label>Úroveň
+          <select id="f-level" class="level-select">
+            ${Object.entries(LEVELS).map(([k,v])=>`<option value="${k}" ${k===d.level?'selected':''}>${v.label}</option>`).join('')}
+          </select>
+        </label>
+      </div>
+      <div class="wage-line">Sazba: ${lvl.base} Kč/h + ${bonusAmount} Kč osobní ohodnocení (${bonusPct}%) = <b>${total} Kč/h</b></div>
+    </div>
+  </div>
+
+  <section class="block">
+    <h2>Adaptační postup</h2>
+    <div class="legend">
+      <span><span class="dot" style="background:#B8B2A2"></span>čeká na zaučení</span>
+      <span><span class="dot" style="background:#C98B1F"></span>zaučen, nutný dohled</span>
+      <span><span class="dot" style="background:#5B7B52"></span>pracuje samostatně</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" style="width:${progressPct}%"></div></div>
+    ${CHECKLIST_GROUPS.map(g=>`
+      <div class="group-label">${g.group}</div>
+      ${g.items.map(([id,label])=>{
+        const st = d.checklist[id];
+        const stLabel = st===0?'čeká':st===1?'dohled':'samostatně';
+        return `<div class="item-row" data-item="${id}">
+          <span class="txt">${label}</span>
+          <span class="state-pill s${st}">${stLabel}</span>
+        </div>`;
+      }).join('')}
+    `).join('')}
+  </section>
+
+  <section class="block">
+    <h2>Měsíční hodnocení</h2>
+    ${EXPECTATIONS.map(([id,name,desc])=>{
+      const st = d.monthly[id];
+      return `<div class="exp-row">
+        <div class="exp-txt">
+          <div class="exp-name">${name}</div>
+          <div class="exp-desc">${desc}</div>
+          ${d.flagged[id] && st===0 ? '<div class="flag-note">Pozor: dřív už měl/a v této kategorii žlutou kartu <a href="#" class="clear-flag" data-clear="'+id+'" style="color:var(--cherry);">(zrušit)</a></div>':''}
+        </div>
+        <div class="exp-btns">
+          <button class="exp-btn ${st===0?'on-ok':''}" data-exp="${id}" data-val="0" title="V pořádku">✓</button>
+          <button class="exp-btn ${st===1?'on-yellow':''}" data-exp="${id}" data-val="1" title="Žlutá karta">!</button>
+          <button class="exp-btn ${st===2?'on-red':''}" data-exp="${id}" data-val="2" title="Červená karta">✕</button>
+        </div>
+      </div>`;
+    }).join('')}
+    <div class="bonus-summary">
+      <span>Osobní ohodnocení tento měsíc</span>
+      <b>${bonusPct}%</b>
+    </div>
+    ${bonusPct===0?'<div class="flag-note" style="margin-top:6px;">Červená karta → dle pravidel následuje ukončení spolupráce.</div>':''}
+    <button class="reset-month" id="resetMonth">Začít nový měsíc (vynuluje hodnocení, historie prohřešků zůstává)</button>
+  </section>
+
+  <section class="block">
+    <h2>Poznámky</h2>
+    <div class="note-form">
+      <div style="display:flex;flex-direction:column;gap:6px;flex:1;">
+        <input id="noteAuthor" placeholder="Jméno (kdo zapisuje)" style="font-family:inherit;font-size:12px;padding:6px 8px;border:1px solid var(--line);border-radius:6px;">
+        <textarea id="noteText" placeholder="Nový záznam… (např. Žlutá karta - hrubé chování k zákazníkům)"></textarea>
+      </div>
+      <button id="addNote">Přidat</button>
+    </div>
+    <div id="notesList">
+      ${d.notes.slice().reverse().map(n=>`
+        <div class="note-item">
+          <div class="note-date">${n.date}${n.author?' · '+escapeHtml(n.author):''}</div>
+          <div>${escapeHtml(n.text)}</div>
+        </div>`).join('') || '<div style="color:var(--cocoa-soft);font-size:12px;">Zatím žádné poznámky.</div>'}
+    </div>
+  </section>
+
+  <button class="danger-link" id="deleteEmp" data-armed="0">Smazat kartu zaměstnance</button>
+  `;
+  mainEl.innerHTML = html;
+  bindMainEvents();
+}
+
+function bindMainEvents(){
+  const d = activeData;
+
+  document.getElementById('f-name').onchange = async e=>{
+    d.name = e.target.value || 'Nový zaměstnanec';
+    await persist();
+    const idx = employees.find(x=>x.id===d.id);
+    if(idx) idx.name = d.name;
+    await saveIndex();
+    renderList();
+  };
+  document.getElementById('f-phone').onchange = async e=>{ d.phone = e.target.value; await persist(); };
+  document.getElementById('f-start').onchange = async e=>{ d.startDate = e.target.value; await persist(); };
+  document.getElementById('f-level').onchange = async e=>{ d.level = e.target.value; await persist(); renderMain(); };
+
+  document.getElementById('photoInput').addEventListener('change', async (e)=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    try{
+      const dataUrl = await resizeImage(file, 300, 0.82);
+      d.photo = dataUrl;
+      await persist();
+      renderMain();
+    }catch(err){
+      console.error('Zpracování fotky selhalo', err);
+    }
+  });
+
+  mainEl.querySelectorAll('.item-row').forEach(row=>{
+    row.onclick = async ()=>{
+      const id = row.dataset.item;
+      d.checklist[id] = (d.checklist[id]+1) % 3;
+      await persist();
+      renderMain();
+    };
+  });
+
+  mainEl.querySelectorAll('.exp-btn').forEach(btn=>{
+    btn.onclick = async ()=>{
+      const id = btn.dataset.exp;
+      const val = parseInt(btn.dataset.val);
+      d.monthly[id] = val;
+      if(val===1){ d.flagged[id] = true; }
+      await persist();
+      renderMain();
+    };
+  });
+
+  mainEl.querySelectorAll('.clear-flag').forEach(link=>{
+    link.onclick = async (e)=>{
+      e.preventDefault();
+      d.flagged[link.dataset.clear] = false;
+      await persist();
+      renderMain();
+    };
+  });
+
+  document.getElementById('resetMonth').onclick = async ()=>{
+    EXPECTATIONS.forEach(([id])=>{ d.monthly[id] = 0; });
+    await persist();
+    renderMain();
+  };
+
+  document.getElementById('addNote').onclick = async ()=>{
+    const ta = document.getElementById('noteText');
+    const authorInput = document.getElementById('noteAuthor');
+    const text = ta.value.trim();
+    if(!text) return;
+    const today = new Date().toISOString().slice(0,10);
+    d.notes.push({date:today, author:authorInput.value.trim(), text});
+    await persist();
+    renderMain();
+  };
+
+  const delBtn = document.getElementById('deleteEmp');
+  delBtn.onclick = async ()=>{
+    if(delBtn.dataset.armed !== '1'){
+      delBtn.dataset.armed = '1';
+      delBtn.textContent = 'Opravdu smazat? (klikni znovu)';
+      return;
+    }
+    await deleteEmployee(d.id);
+    employees = employees.filter(x=>x.id!==d.id);
+    await saveIndex();
+    activeId = null; activeData = null;
+    renderList();
+    mainEl.innerHTML = '<div class="empty-state">Vyber zaměstnance vlevo, nebo přidej nového.</div>';
+  };
+}
+
+async function persist(){
+  try{ await saveEmployee(activeData); }
+  catch(e){ console.error('Uložení selhalo', e); }
+}
+
+const addBtn = document.getElementById('addBtn');
+const addForm = document.getElementById('addForm');
+const newNameInput = document.getElementById('newNameInput');
+
+addBtn.onclick = ()=>{
+  addForm.style.display = 'flex';
+  addBtn.style.display = 'none';
+  newNameInput.value = '';
+  newNameInput.focus();
+};
+
+document.getElementById('cancelAdd').onclick = ()=>{
+  addForm.style.display = 'none';
+  addBtn.style.display = 'block';
+};
+
+async function submitNewEmployee(){
+  const name = newNameInput.value.trim();
+  if(!name) { newNameInput.focus(); return; }
+  const emp = blankEmployee(name);
+  await saveEmployee(emp);
+  employees.push({id:emp.id, name:emp.name});
+  await saveIndex();
+  addForm.style.display = 'none';
+  addBtn.style.display = 'block';
+  await selectEmployee(emp.id);
+}
+
+document.getElementById('confirmAdd').onclick = submitNewEmployee;
+newNameInput.addEventListener('keydown', e=>{
+  if(e.key === 'Enter'){ e.preventDefault(); submitNewEmployee(); }
+});
+
+// --- Export / import zálohy (funguje v obou režimech, nutné pro stažený .html) ---
+document.getElementById('exportBtn').onclick = async ()=>{
+  const data = {};
+  for(const e of employees){
+    data[e.id] = await loadEmployee(e.id);
+  }
+  const payload = JSON.stringify({employees, data}, null, 2);
+  const blob = new Blob([payload], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'karty-zamestnancu-' + new Date().toISOString().slice(0,10) + '.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+};
+
+const importFileInput = document.getElementById('importFile');
+document.getElementById('importBtn').onclick = ()=> importFileInput.click();
+importFileInput.addEventListener('change', async ()=>{
+  const file = importFileInput.files[0];
+  if(!file) return;
+  try{
+    const text = await file.text();
+    const parsed = JSON.parse(text);
+    if(!parsed.employees || !parsed.data) throw new Error('neplatný formát');
+    employees = parsed.employees;
+    await saveIndex();
+    for(const id of Object.keys(parsed.data)){
+      await saveEmployee(parsed.data[id]);
+    }
+    renderList();
+    if(employees.length) await selectEmployee(employees[0].id);
+  }catch(e){
+    document.getElementById('modeNote').textContent = 'Import se nezdařil – soubor neodpovídá formátu zálohy.';
+  }
+  importFileInput.value = '';
+});
+
+document.getElementById('modeNote').textContent = hasCloud
+  ? 'Data se ukládají automaticky a jsou sdílená se všemi, kdo mají tento artifact otevřený v Claude.'
+  : 'Tento soubor běží samostatně (offline) – data se ukládají jen v tomto prohlížeči. Pro přenos mezi počítači nebo sdílení s kolegou použij "Uložit zálohu" a "Nahrát zálohu".';
+
+(async function init(){
+  await loadIndex();
+  renderList();
+  if(employees.length){
+    await selectEmployee(employees[0].id);
+  }
+})();
+</script>
+</body>
+</html>
