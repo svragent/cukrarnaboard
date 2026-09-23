@@ -328,7 +328,7 @@ const DEFAULT_GUIDES = {
 // draft:true zobrazí upozornění, že jde o koncept ke kontrole.
 const TESTS = {
   logistika:{
-    title:"Co je Sladká dílna", passPct:80, onPass:2, draft:true,
+    title:"Co je Sladká dílna", passPct:80, onPass:2, display:10, draft:true,
     questions:[
       {q:"Co je podle úvodu manuálu v cukrárně nejdůležitější?",
        options:["Jen dorty a káva","Lidé – zákazníci i tým","Rychlost obsluhy za každou cenu"], correct:1},
@@ -339,7 +339,21 @@ const TESTS = {
       {q:"Kdy smím používat osobní telefon?",
        options:["Kdykoli je klid","U kasy, pokud nejsou zákazníci","Jen v zázemí, když potřebuji vyřídit něco důležitého"], correct:2},
       {q:"Smíme jíst před zákazníky?",
-       options:["Ano, když nikdo nečeká na obsluhu","Ne, před zákazníky nikdy nejíme","Ano, ale jen zákusky"], correct:1}
+       options:["Ano, když nikdo nečeká na obsluhu","Ne, před zákazníky nikdy nejíme","Ano, ale jen zákusky"], correct:1},
+      {q:"Co najdeš v kanceláři?",
+       options:["Osobní věci na uskladnění","Zástěru a cedulku „školím se“","Nic, kancelář je jen pro vedoucí"], correct:1},
+      {q:"V jakém oblečení chodíme na směnu?",
+       options:["V libovolném pohodlném","V tmavém, ideálně černé triko a černé legíny/šortky","Ve firemním tričku jakékoli barvy"], correct:1},
+      {q:"Co najdeš v chladícím boxu?",
+       options:["Mléko, citrusy na limonády, dorty na objednávku, pečené nanuky, makronky","Jen mléko","Jen dorty na objednávku"], correct:0},
+      {q:"K čemu je určená doplňovací „bílá“ lednice?",
+       options:["Na dezerty","Na koláče a kusy dortů","Na nápoje"], correct:0},
+      {q:"K čemu je určená doplňovací „prosklená“ lednice?",
+       options:["Na dezerty","Na koláče a kusy dortů","Na nápoje"], correct:1},
+      {q:"Co uděláš, když jdeš vyzvednout objednaný dort a nemůžeš ho v boxu najít?",
+       options:["Rovnou řeknu zákazníkovi, že dort nemáme","Podívám se do lednice, zeptám se ve výrobě, zkusím to znovu, a teprve pak informuji zákazníka","Zákazníkovi dort prostě nedám"], correct:1},
+      {q:"Kdo je majitelka/zakladatelka Sladké dílny?",
+       options:["Iryna Jamborova","Martina Krausová","Petra Stejskalová"], correct:0}
     ]
   },
   test1:{
@@ -419,7 +433,7 @@ const TESTS = {
     ]
   },
   test2:{
-    title:"Test pokročilého", passPct:80, onPass:2, draft:true,
+    title:"Test pokročilého", passPct:80, onPass:2, display:10, draft:true,
     questions:[
       {q:"Nad kolik °C se mléko při šlehání nesmí zbytečně přehřívat?",
        options:["45 °C","65 °C","85 °C"], correct:1},
@@ -430,7 +444,311 @@ const TESTS = {
       {q:"Zmrzlina je příliš tuhá. Co uděláš?",
        options:["Snížím stupeň chlazení","Zvýším stupeň chlazení","Vypnu stroj"], correct:0},
       {q:"Kolik gramů má malá zmrzlina?",
-       options:["120 g","60 g","80 g"], correct:2}
+       options:["120 g","60 g","80 g"], correct:2},
+      {q:"Který čaj se podává bez sítka uvnitř (zbytek se sítky)?",
+       options:["Černý","Zelený","Mátový"], correct:1},
+      {q:"Jaká je teplota vody na zelený čaj?",
+       options:["80 stupňů","100 stupňů","60 stupňů"], correct:0},
+      {q:"Kolik gramů prášku matchy se prosívá na jednu přípravu?",
+       options:["1 g","2 g","5 g"], correct:1},
+      {q:"Na jakou teplotu se zalévá matcha vodou?",
+       options:["Vroucí (100 °C)","Max 80 °C","Studenou vodou"], correct:1},
+      {q:"Jak dlouho trvá extrakce double espressa (doppia)?",
+       options:["10–15 sekund","25–28 sekund","45 sekund"], correct:1},
+      {q:"Kolik shotů kávy je v cappuccinu?",
+       options:["Jeden","Dva","Podle velikosti"], correct:0},
+      {q:"Kolik shotů kávy je ve vídeňské kávě?",
+       options:["Jeden","Dva","Žádný"], correct:0}
+    ]
+  },
+  nandavani:{
+    title:"Nandávání a debaras nádobí", passPct:80, onPass:2, display:10, draft:true,
+    questions:[
+      {q:"Jakým nástrojem nabíráš Pavlovu?",
+       options:["Zaoblenými kleštěmi","Širší lopatkou","Užší lopatkou a rovnými kleštěmi"], correct:1},
+      {q:"Jak bereš pečené nanuky a cake popy?",
+       options:["Za tyčku, nedotýkám se zákusku","Rukou zespodu","Lopatkou"], correct:0},
+      {q:"Kam patří kelímky od Tiramisu/panna cotty po dojedení?",
+       options:["Vyhodím je do koše","Nosím je na myčku, nevyhazuji je","Nechám je na stole pro dalšího zákazníka"], correct:1},
+      {q:"Kolik špinavého nádobí minimálně nosím do kuchyně najednou?",
+       options:["Nikdy nechodím jen s jedním kusem, např. talířem","Stačí jeden talíř, hlavně chodit často","Na množství nezáleží"], correct:0},
+      {q:"Co dělám s dřevěnými tácky od zákusků?",
+       options:["Nosím je na myčku jako ostatní nádobí","Otřu je hadříkem a vrátím zpět do poličky","Vyhodím je"], correct:1},
+      {q:"Od kolika kusů balíme zákusky s sebou do krabičky místo papíru?",
+       options:["Od 2 kusů","Od 4 kusů","Od 6 kusů"], correct:1},
+      {q:"Jak servírujeme běžný zákusek na talíř?",
+       options:["Nápisem od zákazníka, ubrousek vpravo","Nápisem směrem k zákazníkovi, ubrousek vlevo a vidlička na něm","Bez ubrousku, jen s vidličkou vedle"], correct:1},
+      {q:"Na čem servírujeme Tiramisu nebo panna cottu?",
+       options:["Na bílém talíři s vidličkou","Na černém ubrousku se lžičkou","Na dřevěném tácku"], correct:1},
+      {q:"Čím vždy odnášíme (debarasujeme) nádobí ze stolů?",
+       options:["Rukama, kolik uneseme","Vždy s platem","Kýblem"], correct:1},
+      {q:"Co uděláš, když vidíš, že zákazník od stolu odchází?",
+       options:["Počkám, až mě osloví kolega","Jdu sklidit nádobí a stůl otřu","Nechám stůl tak, uklidí to jiná směna"], correct:1},
+      {q:"Jakým nástrojem bereš chlebíčky?",
+       options:["Rukama","Zaoblenými kleštěmi určenými jen na slané výrobky","Širší lopatkou"], correct:1},
+      {q:"Kolik kousků se vejde do velkého tácku s velkým papírem při balení s sebou?",
+       options:["2–3 ks","4–5 ks","8–10 ks"], correct:1}
+    ]
+  },
+  ranni_vecerni:{
+    title:"Ranní příprava a večerní úklid", passPct:80, onPass:2, display:10, draft:true,
+    questions:[
+      {q:"Co uděláš hned ráno s kávovarem a vitrínou na chlebíčky?",
+       options:["Necháš je vypnuté do příchodu prvního zákazníka","Zapneš je, ať se stihnou nahřát/nachladit","Zapneš jen kávovar"], correct:1},
+      {q:"Jaký je ranní depozit v pokladně?",
+       options:["1000 Kč","3000 Kč","5000 Kč"], correct:1},
+      {q:"V kolik hodin večer začínáme skládat dezerty na čisté tácy?",
+       options:["17:30","19:00","Až po zavíračce"], correct:0},
+      {q:"Co uděláš v 18:00, i když je zrovna fronta?",
+       options:["Počkám, až fronta skončí","Začnu zanášet trvanlivější dezerty z vitríny do lednice","Zavřu vitrínu"], correct:1},
+      {q:"Kde je klíček od kasy po zhasnutí na konci směny?",
+       options:["V kase","Pod tiskárnou","U vedoucího doma"], correct:1},
+      {q:"Co se dělá ráno se židlemi a stoly?",
+       options:["Nic, zůstávají jak jsou","Sundají se všechny židle a stoly se otřou hadrem","Jen se osprchují venku"], correct:1},
+      {q:"Co se ráno kontroluje/aktualizuje u Foodory?",
+       options:["Nic, řeší to centrála","Dostupnost položek","Jen platby"], correct:1},
+      {q:"Kam se večer dávají dorty, které se neprodaly?",
+       options:["Zůstávají ve vitríně přes noc","Zanesou se holkám za roh na stůl","Vyhodí se"], correct:1},
+      {q:"Kam se dávají špinavé utěrky na konci dne?",
+       options:["Do červeného pytle u kanceláře, a připraví se nové","Nechají se u kávovaru","Vyperou se hned na place"], correct:0},
+      {q:"Co se při večerním úklidu doplňuje podle FIFO (kromě vitríny)?",
+       options:["Lednice na chlazené nápoje a nápojová polička","Jen kasa","Jen dětský koutek"], correct:0},
+      {q:"Co zkontroluješ u příruční lednice před odchodem?",
+       options:["Nic, není potřeba","Že je dozavřená","Že je prázdná"], correct:1},
+      {q:"Co se má stát s ledovačem s lopatkou venku před odchodem?",
+       options:["Nechá se otevřený","Zavře se","Odnese se dovnitř"], correct:1}
+    ]
+  },
+  vitrina:{
+    title:"Doplňování vitríny", passPct:80, onPass:2, display:10, draft:true,
+    questions:[
+      {q:"Jak funguje metoda FIFO při doplňování vitríny?",
+       options:["Čerstvější dozadu, starší dopředu","Starší dozadu, čerstvější dopředu","Na pořadí nezáleží"], correct:1},
+      {q:"Kdy doplňuješ tác akutně?",
+       options:["Když chybí 1 kus","Když chybí 4 a více kusů","Jen na požádání vedoucí"], correct:1},
+      {q:"Kolik druhů dortu maximálně dáváme na jeden tác?",
+       options:["Max 2, výjimečně 3","Vždy jen 1","Kolik se vejde"], correct:0},
+      {q:"Jak mají být dorty ve vitríně otočené?",
+       options:["Zadní stranou k zákazníkovi","Řezem k zákazníkovi, se správnou cedulkou","Na tom nezáleží"], correct:1},
+      {q:"Co uděláš, když je tác určený na doplnění špinavý?",
+       options:["Doplním na něj rovnou","Nejdřív ho očistím","Použiju jiný tác a špinavý nechám tak"], correct:1},
+      {q:"Kolik rumových koulí je na jednom tácku?",
+       options:["6","9","12"], correct:1},
+      {q:"Jaké je pravidlo pro doplňování cake pops?",
+       options:["Doplňují se jednou barvou","Vždy MIX barev na tácku","Na barvě nezáleží"], correct:1},
+      {q:"Kolik táců je ve třetím patře vitríny?",
+       options:["2","4","6"], correct:1},
+      {q:"Kde je umístěná Pavlova ve spodním patře?",
+       options:["Vepředu, ať je hned vidět","Vzadu za dalšími dorty","Mimo vitrínu"], correct:1},
+      {q:"Kde je u porcovek/větrníků umístěná cedulka na tácku?",
+       options:["Na kraji","Na středu tácku","Cedulka se nedává"], correct:1},
+      {q:"Kdo připravuje vitrínu ráno?",
+       options:["Cukrářky","Plac","Vedoucí sama"], correct:0},
+      {q:"Co pustíš ráno u vitríny hned po kontrole cedulek?",
+       options:["Světlo","Větrák na chlazení","Hudbu"], correct:1}
+    ]
+  },
+  kasa:{
+    title:"Kasa", passPct:80, onPass:2, display:10, draft:true,
+    questions:[
+      {q:"Kdo počítá a uzavírá pokladnu?",
+       options:["Kdokoli na směně","Vedoucí","Účetní"], correct:1},
+      {q:"Přijímáme stravenky?",
+       options:["Ano, vždy","Ne, ale lze platit stravenkovou kartou (ne vždy funguje)","Ano, ale jen v hotovosti"], correct:1},
+      {q:"Jaká je minimální hodnota poukazu?",
+       options:["100 Kč","200 Kč","500 Kč"], correct:1},
+      {q:"Jaká je zaměstnanecká sleva na vše?",
+       options:["10 %","20 %","30 %"], correct:1},
+      {q:"Jak dlouho platí poukaz od vystavení?",
+       options:["6 měsíců","1 rok","Neomezeně"], correct:1},
+      {q:"Kam se markuje zbylá částka, kterou zákazník doplácí po odečtení poukazu?",
+       options:["Pod položku „doplatek“","Jako nová položka se stejným názvem","Nikam, jen se řekne nahlas"], correct:0},
+      {q:"Kde v systému vytváříš nový poukaz?",
+       options:["V administraci, sekce Aktivní poukazy","Přímo na kase tlačítkem Poukaz","Poukazy vytváří jen centrála"], correct:0},
+      {q:"Co znamená v kase „ODPIS“?",
+       options:["Zboží se nedá prodat kvůli špatné kvalitě/stáří","Zákusek spadl nebo se zničil a nejde opravit","Zákazník zboží reklamoval"], correct:1},
+      {q:"Co znamená v kase „VYŘAZENO“?",
+       options:["Zboží se nedá prodat kvůli špatné kvalitě/nestabilitě/stáří","Zákusek spadl a rozbil se","Zákazník ho vrátil"], correct:0},
+      {q:"Co se stane, když je cena, kterou má zákazník platit, nižší než hodnota poukazu?",
+       options:["Zbytek se vrátí v hotovosti","Peníze se nevrací","Zbytek se připíše na příště"], correct:1},
+      {q:"Jak může zákazník doplatit rozdíl mezi cenou a hodnotou poukazu?",
+       options:["Jen hotově","Hotově nebo kartou","Jen kartou"], correct:1},
+      {q:"Od kdy se počítá roční platnost poukazu?",
+       options:["Od data vystavení","Od prvního použití","Od konce měsíce"], correct:0}
+    ]
+  },
+  tocenim:{
+    title:"Točení zmrzliny", passPct:80, onPass:2, display:10, draft:true,
+    questions:[
+      {q:"Kolik gramů má malá zmrzlina?",
+       options:["60 g","80 g","120 g"], correct:1},
+      {q:"Jak vytočíš velkou zmrzlinu (120 g)?",
+       options:["Jedna otočka a špička","Dvě otočky a špička","Tři otočky"], correct:1},
+      {q:"Kolik velkých zmrzlin se vejde do velkého termoboxu?",
+       options:["Až 3","Až 5","Až 10"], correct:1},
+      {q:"Zmrzlina je příliš tuhá/zmrzlá, co uděláš?",
+       options:["Zvýším stupeň chlazení","Snížím stupeň chlazení","Vypnu stroj"], correct:1},
+      {q:"Jak dáš stroj večer do nočního režimu?",
+       options:["Vypnu ho úplně ze zásuvky","Stisknu symbol skleničky a vločky","Nechám ho běžet jako přes den"], correct:1},
+      {q:"Které zmrzliny patří mezi SORBET?",
+       options:["Vanilková a čokoládová","Ovocné (malinová, jahodová, mango&maracuja, černý rybíz)","Kokosová a karamelová"], correct:1},
+      {q:"Kolik gramů má „baby“ zmrzlina?",
+       options:["40 g","60 g","100 g"], correct:1},
+      {q:"Co uděláš, když u míchané zmrzliny teče jen jedna příchuť?",
+       options:["Sníž stupeň chlazení a toč se zapnutým tlačítkem SET, pak vrať na výrobu","Vypni stroj a zavolej vedoucího","Přidej vodu do stroje"], correct:0},
+      {q:"Zmrzlinovač při točení praská a je zavzdušněný. Co je první krok?",
+       options:["Rovnou odpojit trubku bez zastavení","U problémové zmrzliny dát páku dolů a zmáčknout STOP","Vypnout celý stroj ze zásuvky"], correct:1},
+      {q:"Zmrzlina vůbec neteče, je zamrzlá. Co se udělá s čerpadlem?",
+       options:["Vyndá se, rozebere, umyje a promaže vazelínou","Nechá se ve stroji a jen se počká","Vymění se za nové"], correct:0},
+      {q:"Jak upravuješ stupeň chlazení?",
+       options:["Stiskneš SET+ZMRZLINA a šipečkou nahoru/dolů, max o 5 stupňů","Otočíš velkým knoflíkem vzadu","Vypneš a znovu zapneš stroj"], correct:0},
+      {q:"Kolik otoček má „malá“ zmrzlina (80 g)?",
+       options:["Jedna otočka a špička","Dvě otočky","Bez otočky, jen špička"], correct:0}
+    ]
+  },
+  kavovar:{
+    title:"Kávovar", passPct:80, onPass:2, display:10, draft:true,
+    questions:[
+      {q:"Kolik shotů kávy je v espressu?",
+       options:["Jeden","Dva","Půl"], correct:0},
+      {q:"Na kolik °C se nesmí zbytečně přehřívat mléko při šlehání?",
+       options:["45 °C","65 °C","85 °C"], correct:1},
+      {q:"Jaký je rozdíl mezi cappuccinem a flat white v množství pěny?",
+       options:["Cappuccino má víc pěny (1–2 cm), flat white skoro žádnou (0,5 cm)","Je to stejné","Flat white má víc pěny"], correct:0},
+      {q:"Kolik shotů je v double espressu (doppiu)?",
+       options:["Jeden","Dva","Tři"], correct:1},
+      {q:"Kdy se do americana přidává mléko?",
+       options:["Vždy automaticky","Jen na vyžádání zákazníka","Nikdy"], correct:1},
+      {q:"Co má espresso macchiatto navíc oproti espressu?",
+       options:["Přidá se voda","Přidají se dvě lžičky lesklé pěny","Přidá se cukr"], correct:1},
+      {q:"Jak se připravuje latte macchiatto, aby vznikly tři pruhy?",
+       options:["Mléko se nalije lehce pod okraj a nechá odstát, pak se pomalu nalije shot","Všechno se smíchá najednou","Mléko se šlehá se shotem dohromady"], correct:0},
+      {q:"Jak se připravuje turecká káva?",
+       options:["V kávovaru jako espresso","Namele se přímo do sklenice a pomalu zalije horkou vodou","Připraví se z instantní kávy"], correct:1},
+      {q:"Kdy nalévám zákazníkovi mléko do kávy s sebou?",
+       options:["Nikdy, mléko se nalévá vždy předem","Přímo před ním, ať může říct, kdy je dost","Jen na požádání vedoucí"], correct:1},
+      {q:"Kolik shotů kávy je v espresso lungu?",
+       options:["Jeden","Dva","Žádný"], correct:0},
+      {q:"Kam se u espresso lunga (mimo verzi s sebou) přidává horká voda?",
+       options:["Přímo do kávy","Vždy zvlášť do konvičky","Vůbec se nepřidává"], correct:1},
+      {q:"Jaká pěna je typická pro cappuccino?",
+       options:["Krásná lesklá pěna, doplněná do plna (1–2 cm)","Skoro žádná pěna","Studená napěněná pěna"], correct:0}
+    ]
+  },
+  system:{
+    title:"Systém – objednávky a výdej", passPct:80, onPass:2, display:10, draft:true,
+    questions:[
+      {q:"Jaké bezlaktózové dorty lze objednat?",
+       options:["Jakýkoli dort bez šlehačky","Jen ovocný světlý nebo ovocný tmavý","Bezlaktózové nejdou objednat"], correct:1},
+      {q:"Jaká je minimální cena figurky na dort?",
+       options:["150 Kč","350 Kč","700 Kč"], correct:1},
+      {q:"Kdy objednáš u Saši figurku vzhledem k termínu dortu?",
+       options:["Týden předem","Den předem","Objedná se automaticky"], correct:0},
+      {q:"Kolik speciálních/svatebních dortů maximálně na jeden den?",
+       options:["1","3","Neomezeně"], correct:1},
+      {q:"Co uděláš, když ti systém nedovolí zadat nestandardní požadavek na dort?",
+       options:["Řeknu zákazníkovi, že to nejde","Zavolám cukrářce Nadě","Objednávku zruším"], correct:1},
+      {q:"Jak založíš běžnou objednávku dortu v adminu?",
+       options:["OBJEDNÁVKY → VYTVOŘIT, zaškrtnu BĚŽNÁ OBJEDNÁVKA","Rovnou zavolám na centrálu","Napíšu zákazníkovi SMS"], correct:0},
+      {q:"Jak založíš objednávku dortu na zítra?",
+       options:["Stejně jako běžnou, jen zaškrtnu NA ZÍTRA (nabídka je limitovaná)","Na zítra nejde nic objednat","Musí to řešit jen vedoucí"], correct:0},
+      {q:"Co dostane zákazník e-mailem po vytvoření objednávky?",
+       options:["Nic, jen SMS","Potvrzovací e-mail s číslem objednávky","Fakturu bez čísla"], correct:1},
+      {q:"O co požádáš zákazníka navíc, když chce dort platit QR kódem nebo kartou?",
+       options:["O nic navíc","O fakturační údaje","O rodné číslo"], correct:1},
+      {q:"Co zaškrtneš, když zákazník platí dort na místě hned při objednání?",
+       options:["Nic, platba se řeší až při vyzvednutí","OZNAČIT OBJEDNÁVKU ZA ZAPLACENOU","NA ZÍTRA"], correct:1},
+      {q:"Kam odkážeš zákazníka, který chce svatební dort?",
+       options:["Na e-shop, kolonka SVATBY","Musí přijít osobně vyplnit formulář na place","Svatební dorty neděláme"], correct:0},
+      {q:"Kolik posledních čísel objednávky bude zákazník potřebovat při vyzvednutí?",
+       options:["Poslední 2","Poslední 3","Celé číslo"], correct:1}
+    ]
+  },
+  michani:{
+    title:"Míchání zmrzliny", passPct:80, onPass:2, display:10, draft:true,
+    questions:[
+      {q:"Kolik vody se používá na vanilkovou zmrzlinu?",
+       options:["2 litry","4 litry","6 litrů"], correct:1},
+      {q:"Co se musí udělat po namíchání, než se zmrzlina leje do stroje?",
+       options:["Rovnou lít do stroje","Dát do chladu alespoň 15 minut a cedit přes síto","Nechat 2 hodiny mimo lednici"], correct:1},
+      {q:"Kolik druhů pyré je v malinové zmrzlině?",
+       options:["Jen malinové","2x malinové a 1x jahodové","3x malinové"], correct:1},
+      {q:"Z kolika dávek normálně mícháme zmrzlinu, pokud vedoucí neřekne jinak?",
+       options:["Z jedné","Vždy ze dvou","Podle počasí"], correct:0},
+      {q:"Co se musí udělat hned po přisypání sáčku báze do vody?",
+       options:["Nechat 10 minut stát","Ihned pořádně rozmíchat","Přidat led"], correct:1},
+      {q:"Kolik vody se používá na čokoládovou zmrzlinu?",
+       options:["2 litry","4 litry","6 litrů"], correct:1},
+      {q:"Kolik druhů pyré je ve zmrzlině mango&maracuja?",
+       options:["2x mangové, 1x mučenkové","Jen mangové","2x mučenkové, 1x mangové"], correct:0},
+      {q:"Kolik vody se používá na zmrzlinu z černého rybízu?",
+       options:["3,2 litru","4,8 litru","6 litrů"], correct:0},
+      {q:"Co navíc obsahuje jogurtová zmrzlina kromě Jogurt top soft?",
+       options:["Nic navíc","2 kg řeckého jogurtu","Smetanu"], correct:1},
+      {q:"Čím se míchá kokosová zmrzlina?",
+       options:["Soft kokos a voda","Kokosové mléko a smetana","Kokosový sirup"], correct:0},
+      {q:"Jaká je hmotnost pytle báze na slaný karamel?",
+       options:["1,5 kg","2 kg","2,5 kg"], correct:1},
+      {q:"Co se dělá se sítem hned po scezení zmrzlinové směsi?",
+       options:["Nechá se namočené do druhého dne","Hned se umyje – stačí opláchnout","Vyhodí se"], correct:1}
+    ]
+  },
+  mytistroj:{
+    title:"Mytí a skládání stroje na zmrzlinu", passPct:80, onPass:2, display:10, draft:true,
+    questions:[
+      {q:"Co se děje s bílými poklopy stroje večer?",
+       options:["Nechají se tak, jak jsou","Umyjí se","Vyhodí se"], correct:1},
+      {q:"Mícháme zmrzlinové směsi dopředu na noc?",
+       options:["Ano, ušetří to čas ráno","Ne, lepší je míchat čerstvé ráno","Jen o víkendu"], correct:1},
+      {q:"Čím se ve zmrzlinové sezóně zakrývají kornoutky přes noc?",
+       options:["Ničím","Igelitovým pytlem","Utěrkou"], correct:1},
+      {q:"Co se dělá s vaničkou od zmrzliny při večerním úklidu?",
+       options:["Nechá se ve stroji","Umyje se a vrátí zpět","Vyhodí se"], correct:1},
+      {q:"Co dalšího se při večerním úklidu vyndá, kromě mytí stroje?",
+       options:["Lopatka na nabírání ledu","Kasa","Mlýnek na kávu"], correct:0},
+      {q:"Jak se otírá stroj na zmrzlinu zvenku?",
+       options:["Neotírá se, jen se umyjí poklopy","Otře se ze všech stran, nerez ideálně speciálním přípravkem","Stačí ho opláchnout vodou"], correct:1},
+      {q:"Co se v letní sezóně navíc čistí spolu se strojem na zmrzlinu?",
+       options:["Šlehač na mléko a odkapávač na zmrzlinu","Jen šlehač na mléko","Nic navíc"], correct:0},
+      {q:"Kam se doplňují kornoutky na zmrzlinu?",
+       options:["Jen do krabice na stole","Do krabice na stole i do záložní krabice","Nikam se nedoplňují dopředu"], correct:1},
+      {q:"Co se ze zásuvky vypojuje na konci dne (mimo stroj na zmrzlinu)?",
+       options:["Rychlovarná konvice, mlýnek a šlehač na mléko","Jen kasa","Nic se nevypojuje"], correct:0},
+      {q:"Jak se stroj na zmrzlinu uvádí večer do nočního režimu?",
+       options:["Vypnutím ze zásuvky","Stisknutím symbolu skleničky a vločky","Sám se přepne po hodině nečinnosti"], correct:1},
+      {q:"Co se stane s odkapávačem na zmrzlinu v letní sezóně při úklidu?",
+       options:["Nechá se tak, jak je","Omyje se","Vyhodí se a nahradí novým"], correct:1},
+      {q:"Co se udělá s vaničkou od zmrzliny po umytí?",
+       options:["Nechá se okapat venku přes noc","Umyje se a vrátí zpět","Nechá se v myčce do rána"], correct:1}
+    ]
+  },
+  limonady:{
+    title:"Vaření limonád", passPct:80, onPass:2, display:10, draft:true,
+    questions:[
+      {q:"Kdy se do malinové limonády přidává citronová šťáva?",
+       options:["Hned na začátku","Až po vychladnutí","Během vaření"], correct:1},
+      {q:"Jak dlouho maximálně necháváme zázvor odležet ve vařící vodě?",
+       options:["5 minut","30 minut","2 hodiny"], correct:1},
+      {q:"Kolik cukru krupice je v malinové limonádě?",
+       options:["250 g","750 g","1,5 kg"], correct:1},
+      {q:"Co se dělá se zázvorem před zalitím vodou?",
+       options:["Rozmixuje se celý i se slupkou","Oloupe se a nakrájí najemno","Nastrouhá se na hrubo"], correct:1},
+      {q:"Co se dělá s malinovou směsí po rozmixování?",
+       options:["Ihned se plní do lahví","Přecedí se přes cedník","Nechá se syrová"], correct:1},
+      {q:"Kolik červeného vína se dává do várnice na svařák?",
+       options:["2 litry","5 litrů","10 litrů"], correct:1},
+      {q:"V jakém pořadí se připravuje svařák do várnice?",
+       options:["Víno se nahřeje, pak se přidá cukr a koření a promíchá","Nejdřív se smíchá cukr s kořením, pak se zalije vínem za studena","Všechno se dá dohromady najednou a povaří"], correct:0},
+      {q:"Kolik mixu čokolády se dává do várnice na horkou čokoládu?",
+       options:["300 g","700 g","1,5 kg"], correct:1},
+      {q:"Jak se horká čokoláda do várnice na závěr dodělá?",
+       options:["Nechá se tak, jak je","Promixuje se tyčovým mixérem","Přecedí se přes cedník"], correct:1},
+      {q:"Co je „Irčin mixér“ u zázvorové limonády?",
+       options:["Speciální stroj na drcení ledu","Alternativní postup, kdy se zázvor rozmixuje s trochou vody a pak přidá zbytek","Značka mixéru na limonády"], correct:1},
+      {q:"Kolik smetany je v receptu na horkou čokoládu do várnice?",
+       options:["0,5 litru","1 litr","2 litry"], correct:1},
+      {q:"Čím se na závěr promíchá svařák ve várnici?",
+       options:["Tyčovým mixérem","Vařečkou","Metličkou"], correct:1}
     ]
   }
 };
@@ -452,6 +770,21 @@ const empListEl = $('empList');
 const mainEl = $('main');
 
 function uid(){ return 'e' + Date.now() + Math.random().toString(36).slice(2,7); }
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    const tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+  }
+  return a;
+}
+// Vybere, které otázky z banky testu T se v tomto pokusu zobrazí (náhodně, pokud je banka
+// větší než T.display) a vrátí pole jejich indexů v T.questions – v tomto pořadí se zobrazí.
+function pickSelIdx(T){
+  const all = T.questions.map((_, i) => i);
+  if(T.display && T.display < T.questions.length) return shuffle(all).slice(0, T.display);
+  return all;
+}
 function escapeHtml(s){
   return String(s == null ? '' : s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
@@ -675,11 +1008,16 @@ function questionsReviewHtml(questions, answers){
 function reviewHtml(id, d){
   const T = TESTS[id];
   const L = d.learn[id] || {};
+  const answers = L.answers || [];
+  // Starší záznamy (před zavedením rotace otázek) nemají L.questionIdx – u nich se
+  // vždy zobrazovaly všechny otázky v pořadí 0..N, takže identita je správná náhrada.
+  const idx = L.questionIdx || answers.map((_, i) => i);
+  const shownQ = idx.map(i => T.questions[i]).filter(Boolean);
   let h = '<div class="quiz">';
   h += '<div class="muted">Odpovědi zaměstnance' + (L.attemptedAt ? ' z ' + fmtStr(L.attemptedAt) : '') +
        ' – výsledek ' + (L.score != null ? L.score + ' %' : '?') + (L.passed ? ' (splněno).' : ' (nesplněno).') +
        ' Plná tečka ● = co zaměstnanec zaškrtl, zeleně je vždy správná odpověď.</div>';
-  h += questionsReviewHtml(T.questions, L.answers || []);
+  h += questionsReviewHtml(shownQ, answers);
   h += '<div class="row"><button class="btn ghost" data-review-close="1">Zavřít</button></div></div>';
   return h;
 }
@@ -690,18 +1028,23 @@ function quizHtml(id, leader){
   const T = TESTS[id];
   const r = quiz.result;
   if(r){
+    const shownQ = r.selIdx.map(i => T.questions[i]);
     return '<div class="quiz">' +
       '<div class="result ' + (r.passed ? 'ok' : 'fail') + '"><b>' + r.correct + ' / ' + r.total + ' správně (' + r.pct + ' %)</b> – ' +
         (r.passed ? 'test splněn.' : 'test nesplněn, potřeba je ' + needText(T) + '.') +
         (leader ? ' (náhled – neuloženo do karty)' : '') + '</div>' +
-      questionsReviewHtml(T.questions, r.answers) +
+      questionsReviewHtml(shownQ, r.answers) +
       '<div class="row"><button class="btn" data-quiz-retry="1">Zkusit znovu</button>' +
       '<button class="btn ghost" data-quiz-close="1">Zavřít</button></div></div>';
   }
+  const shown = quiz.selIdx.map(i => T.questions[i]);
+  const rotNote = (T.display && T.display < T.questions.length)
+    ? ('<div class="muted">Zobrazeno ' + T.display + ' z ' + T.questions.length + ' otázek, vybraných náhodně – při dalším pokusu se mohou lišit.</div>') : '';
   return '<div class="quiz">' +
     (leader ? '<div class="draft-note">Náhled pro vedoucího – odpovědi se nikam neukládají.' + (T.todo ? '<br>' + escapeHtml(T.todo) : '') + '</div>' :
       (T.draft ? '<div class="draft-note">Koncept otázek podle manuálu – vedoucí ať je před ostrým použitím zkontroluje.' + (T.todo ? '<br>' + escapeHtml(T.todo) : '') + '</div>' : '')) +
-    T.questions.map((q,i)=>
+    rotNote +
+    shown.map((q,i)=>
       '<div class="q"><div class="qt">' + (i+1) + '. ' + escapeHtml(q.q) + '</div>' +
       q.options.map((o,j)=>'<label class="opt"><input type="radio" name="q' + i + '" value="' + j + '"> <span>' + escapeHtml(o) + '</span></label>').join('') +
       '</div>').join('') +
@@ -867,26 +1210,31 @@ function bindMainEvents(){
 
   // test
   mainEl.querySelectorAll('[data-start-test]').forEach(b=>{
-    b.onclick = ()=>{ quiz = {id:b.dataset.startTest, result:null, preview:(MODE==='leader')}; renderMain(); };
+    b.onclick = ()=>{
+      const tid = b.dataset.startTest;
+      quiz = {id:tid, result:null, preview:(MODE==='leader'), selIdx:pickSelIdx(TESTS[tid])};
+      renderMain();
+    };
   });
   mainEl.querySelectorAll('[data-quiz-close]').forEach(b=>{
     b.onclick = ()=>{ quiz = null; renderMain(); };
   });
   mainEl.querySelectorAll('[data-quiz-retry]').forEach(b=>{
-    b.onclick = ()=>{ quiz = {id:quiz.id, result:null, preview:quiz.preview}; renderMain(); };
+    b.onclick = ()=>{ quiz = {id:quiz.id, result:null, preview:quiz.preview, selIdx:pickSelIdx(TESTS[quiz.id])}; renderMain(); };
   });
   const submit = $('quizSubmit');
   if(submit) submit.onclick = async ()=>{
     const id = quiz.id;
     const T = TESTS[id];
-    const answers = T.questions.map((q,i)=>{
+    const shownQ = quiz.selIdx.map(i => T.questions[i]);
+    const answers = shownQ.map((q,i)=>{
       const el = mainEl.querySelector('input[name="q' + i + '"]:checked');
       return el ? parseInt(el.value, 10) : null;
     });
     if(answers.indexOf(null) !== -1){ $('quizMsg').textContent = 'Odpověz prosím na všechny otázky.'; return; }
     let correct = 0;
-    T.questions.forEach((q,i)=>{ if(answers[i] === q.correct) correct++; });
-    const total = T.questions.length;
+    shownQ.forEach((q,i)=>{ if(answers[i] === q.correct) correct++; });
+    const total = shownQ.length;
     const pct = Math.round(correct / total * 100);
     const passed = T.passMin ? correct >= T.passMin : pct >= T.passPct;
     if(!quiz.preview){
@@ -894,13 +1242,14 @@ function bindMainEvents(){
       if(passed){ L.passed = true; L.score = pct; }
       else if(!L.passed){ L.score = pct; }
       L.answers = answers.slice();
+      L.questionIdx = quiz.selIdx.slice();
       L.attemptedAt = todayStr();
       const cur = d.checklist[id];
       if(passed){ if(RANK[T.onPass] > RANK[cur]) d.checklist[id] = T.onPass; }
       else if(cur === 0){ d.checklist[id] = 3; }
       await persist();
     }
-    quiz.result = {correct, total, pct, passed, answers: answers.slice()};
+    quiz.result = {correct, total, pct, passed, answers: answers.slice(), selIdx: quiz.selIdx.slice()};
     renderMain();
   };
 
